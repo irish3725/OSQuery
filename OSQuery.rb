@@ -13,7 +13,7 @@ page = input[0]
 url = "http://oldschoolrunescape.wikia.com/wiki/#{page}"
 #url = "http://en.wikipedia.org/wiki/#{page}"
 
-puts(url)
+#puts(url)
 
 # request page
 page = HTTParty.get(url)
@@ -21,8 +21,58 @@ page = HTTParty.get(url)
 # turn page into Nokogiri object
 parsed_page = Nokogiri::HTML(page)
 
-dropped_by = parsed_page.css(".sortable").css("td").css("a").children.map { |by| by.text }.compact
-rate = parsed_page.css(".sortable").css("td").css("small").children.map { |r| r.text }.compact
+dropped_by = 
+table = parsed_page.css(".sortable").css("td").children.map { |r| r.text }
 
-puts("Dropped by:#{dropped_by} at rate #{rate}")
+#puts("table = #{table}")
+state = 0
+
+# create arrays to hold values about item info
+monster = Array.new
+amount = Array.new
+rate = Array.new
+
+# parse table
+while table.length > 0 do
+    # get next value and remove all whitespace
+    value = table.shift.gsub(/(\W|^\;)/, "") 
+  
+    # if state is 0 or 2, remove all digits 
+    if state == 0 or state == 2
+        value.gsub(/\d/, "")
+    end
+ 
+    # looking for monster that drops 
+    if state == 0 and value != ""
+        monster.push(value)
+        state = 1
+    # removing monster cb lvl 
+    elsif state == 1 and value != "" 
+        state = 2 
+    # looking for amount dropped
+    elsif state == 2 and value != "" 
+        amount.push(value)
+        state = 3 
+    # looking for rarity 
+    elsif state == 3 
+        if value == "Common" or value == "Uncommon" or value == "Rare" or value == "VeryRare"
+            rate.push(value)
+            state = 4 
+        end 
+    # looking for exact rate ( hence "(" ) 
+    elsif state == 4 
+        if table[0] != nil and table[0].include? "("
+            rate = rate + " " + table.shift 
+            puts(rate)
+        end 
+        state = 0
+    end 
+end
+
+# print found values
+puts("Monster\t\t\tAmount\t\tRate")
+puts("_______\t\t\t______\t\t____")
+for i in 0..monster.length - 1
+    printf "%-20s\t%-10s\t%s\n", monster[i], amount[i], rate[i]
+end
 
