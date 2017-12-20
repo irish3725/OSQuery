@@ -24,5 +24,5 @@ From Git clone on Debian Linux:
 Now to run it:
 
     cd OSQuery
-    ruby OSQuery This_item
+    ruby OSQuery.rb This_item
 
