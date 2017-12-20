@@ -13,7 +13,7 @@ page = input[0]
 url = "http://oldschoolrunescape.wikia.com/wiki/#{page}"
 #url = "http://en.wikipedia.org/wiki/#{page}"
 
-#puts(url)
+puts(url)
 
 # request page
 page = HTTParty.get(url)
@@ -35,12 +35,12 @@ rate = Array.new
 # parse table
 while table.length > 0 do
     # get next value and remove all whitespace
-    value = table.shift.gsub(/(\W|^\;)/, "") 
+#    value = table.shift.gsub(/(\W|^\;)/, "") 
+    value = table.shift.strip 
   
-    # if state is 0 or 2, remove all digits 
-    if state == 0 or state == 2
-        value.gsub(/\d/, "")
-    end
+#    if state == 0 or state == 2
+#        value.gsub(/\d/, "")
+#    end
  
     # looking for monster that drops 
     if state == 0 and value != ""
@@ -55,17 +55,19 @@ while table.length > 0 do
         state = 3 
     # looking for rarity 
     elsif state == 3 
-        if value == "Common" or value == "Uncommon" or value == "Rare" or value == "VeryRare"
+        # check to see if we find expected rarity 
+        if value == "Always" or value == "Common" or value == "Uncommon" or value == "Rare" or value == "Very rare"
             rate.push(value)
             state = 4 
         end 
-    # looking for exact rate ( hence "(" ) 
-    elsif state == 4 
-        if table[0] != nil and table[0].include? "("
-            rate = rate + " " + table.shift 
-            puts(rate)
+        # looking for exact rate ( hence "(" ) 
+        if state == 4 
+            if table[0] != nil and table[0].include? "("
+                index = rate.length - 1 
+                rate[index] = rate[index] + " " + table.shift 
+            end 
+            state = 0
         end 
-        state = 0
     end 
 end
 
