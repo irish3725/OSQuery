@@ -18,6 +18,12 @@ puts(url)
 # request page
 page = HTTParty.get(url)
 
+if page.include? "This page does not exist. Mayhaps it should?"
+    abort("\nIncorrect input. The syntax is:\n\n\tOSQuery This_item\n\nThe first letter of the item must be capitalized with the rest of the letters lowercase, and there must be an underscore between each word with no spaces.")
+end
+
+puts(page)
+
 # turn page into Nokogiri object
 parsed_page = Nokogiri::HTML(page)
 
