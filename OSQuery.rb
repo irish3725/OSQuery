@@ -18,6 +18,7 @@ puts(url)
 # request page
 page = HTTParty.get(url)
 
+# check to see if this was a valid request
 if page.include? "This page does not exist. Mayhaps it should?"
     abort("\nIncorrect input. The syntax is:\n\n\tOSQuery This_item\n\nThe first letter of the item must be capitalized with the rest of the letters lowercase, and there must be an underscore between each word with no spaces.")
 end
@@ -25,10 +26,13 @@ end
 # turn page into Nokogiri object
 parsed_page = Nokogiri::HTML(page)
 
-dropped_by = 
+# get table of drop info from page
 table = parsed_page.css(".sortable").css("td").children.map { |r| r.text }
 
+# prints table for debugging
 #puts("table = #{table}")
+
+# state for parsing table
 state = 0
 
 # create arrays to hold values about item info
@@ -39,18 +43,13 @@ rate = Array.new
 # parse table
 while table.length > 0 do
     # get next value and remove all whitespace
-#    value = table.shift.gsub(/(\W|^\;)/, "") 
     value = table.shift.strip 
   
-#    if state == 0 or state == 2
-#        value.gsub(/\d/, "")
-#    end
- 
     # looking for monster that drops 
     if state == 0 and value != ""
         monster.push(value)
         state = 1
-    # removing monster cb lvl 
+    # removing monster cb lvl field 
     elsif state == 1 and value != "" 
         state = 2 
     # looking for amount dropped
@@ -63,17 +62,17 @@ while table.length > 0 do
         if value == "Always" or value == "Common" or value == "Uncommon" or value == "Rare" or value == "Very rare"
             rate.push(value)
             state = 4 
-        end 
+        end # end rarity check 
         # looking for exact rate ( hence "(" ) 
         if state == 4 
             if table[0] != nil and table[0].include? "("
                 index = rate.length - 1 
                 rate[index] = rate[index] + " " + table.shift 
-            end 
+            end # end exact rate check 
             state = 0
-        end 
-    end 
-end
+        end # end state 4 (after change I don't think state 4 is nessissary) 
+    end # end state check 
+end # end parse table while loop
 
 # print found values
 puts("Monster\t\t\tAmount\t\tRate")
