@@ -11,9 +11,9 @@ input = ARGV
 page = input[0]
 # get url for specific page
 url = "http://oldschoolrunescape.wikia.com/wiki/#{page}"
-#url = "http://en.wikipedia.org/wiki/#{page}"
 
-puts(url)
+# prints url for debugging
+#puts(url)
 
 # request page
 page = HTTParty.get(url)
@@ -74,10 +74,15 @@ while table.length > 0 do
     end # end state check 
 end # end parse table while loop
 
-# print found values
-puts("Monster\t\t\tAmount\t\tRate")
-puts("_______\t\t\t______\t\t____")
-for i in 0..monster.length - 1
-    printf "%-20s\t%-10s\t%s\n", monster[i], amount[i], rate[i]
-end
-
+# check to see if any monsters drop this item
+if monster.length > 0
+    # print found values
+    puts("Monster\t\t\tAmount\t\tRate")
+    puts("_______\t\t\t______\t\t____")
+    for i in 0..monster.length - 1
+        printf "%-20s\t%-10s\t%s\n", monster[i], amount[i], rate[i]
+    end # end print for drop table
+# if no mosters drop this item, print notice
+else 
+    puts("There doesn't seem to be any monsters that drop this item. That could mean it is a quest item, a Raids reward, a Minigame Reward, or its dropped by most thing like Bones")
+end # end check for if dropped
