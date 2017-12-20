@@ -3,7 +3,7 @@
 require 'httparty'
 require 'nokogiri'
 require 'json'
-require 'pry'
+#require 'pry'
 
 # get input arguments
 input = ARGV

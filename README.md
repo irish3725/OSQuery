@@ -5,21 +5,29 @@ So far all OSQuery does is take in an item as an arguement and returns the monst
 
 Example:
 
-    $ ruby OSQuery Blood_rune
+    $ ruby OSQuery.rb Blood_rune
 
 The syntax is very specific. It will only read one argument, and that argument must start with an uppercase letter, all of the rest of the letters must be lowercase, and there must be an underscore between each word.
 
-### Installing
+### Installing OSQuery
  
 I this tool is being developed on Debian Linux, and I have not yet tested it on any other operating system.
 
 From Git clone on Debian Linux:
 
-    git clone https://github.com/irish3725/OSQuery.git
+    git clone https://github.com/irish3725/OSQuery.git 
     sudo apt-get install ruby-full
     gem install nokogiri
     gem install httparty
-    gem install pry
+
+From Git clone on OS X (probably):
+
+    git clone https://github.com/irish3725/OSQuery.git
+    sudo brew install ruby
+    gem install nokogiri
+    gem install httparty 
+
+### Running OSQuery
 
 Now to run it:
 
