@@ -38,5 +38,6 @@ Now to run it:
 
 ### Options
 
-    -i      Get drop info about an item
+    -i      Get info about an item
+    -m      Get info about a monster 
 

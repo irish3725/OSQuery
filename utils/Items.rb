@@ -34,7 +34,7 @@ class Items
         # check to see if this was a valid request
         if @page.include? "This page does not exist. Mayhaps it should?"
             # if not valid request, abort 
-            abort("\nIncorrect input. The syntax is:\n\n\tOSQuery This_item\n\nThe first letter of the item must be capitalized with the rest of the letters lowercase, and there must be an underscore between each word with no spaces.")
+            abort("Incorrect input. Make sure your spelling is correct. The syntax is:\n\n\tOSQuery -i This_item\n\nThe first letter of the item must be capitalized with the rest of the letters lowercase, and there must be an underscore between each word with no spaces.")
         end # -- end check for valid request
     end # -- end getPage
 

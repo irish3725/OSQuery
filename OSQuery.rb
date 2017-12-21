@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 
 require_relative 'utils/Items'
+require_relative 'utils/Monsters'
 
 # extracts options from input
 def getOptions
@@ -26,6 +27,10 @@ def main
     if @options[0] == "i"
         items = Items.new(@options.push(ARGV[1]))
         items.run
+    # check to see if options suggest we need to look for monsters
+    elsif @options[0] == "m"
+        monsters = Monsters.new(@options.push(ARGV[1])) 
+        monsters.run
     else
         abort("#{ARGV[0]} is not a valid option")
     end # -- end check for items option 
