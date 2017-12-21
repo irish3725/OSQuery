@@ -38,5 +38,5 @@ Now to run it:
 
 ### Options
 
--i      Get drop info about an item
+    -i      Get drop info about an item
 
