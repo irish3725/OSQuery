@@ -25,7 +25,7 @@ From Git clone on OS X (probably):
 
     git clone https://github.com/irish3725/OSQuery.git
     sudo brew install ruby
-    sudo apt-get install build-essential patch ruby-dev zlib1g-dev liblzma-dev
+    sudo brew install build-essential patch ruby-dev zlib1g-dev liblzma-dev
     gem install nokogiri
     gem install httparty 
 
