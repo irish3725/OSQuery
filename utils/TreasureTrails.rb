@@ -11,7 +11,6 @@ class TreasureTrails
 
     #run TreasureTrails object
     def run
-        puts("arguments: #{@arguments}")
         getPages
         findPage
         #printSolution
@@ -26,7 +25,6 @@ class TreasureTrails
         @urls[3] = @urls[3] + "Coordinates"
         @urls[4] = @urls[4] + "Cryptics"
         @urls[5] = @urls[5] + "Emote_clues"
-        @urls.each {|url| puts(url)}
         @pages = Array.new(6)
         @urls.each_with_index {|url, index| @pages[index] = HTTParty.get(@urls[index])}
 #        @pages.each_with_index { |page, index| page = 
@@ -38,13 +36,39 @@ class TreasureTrails
     def findPage
         puts("searching for clue: #{@arguments}")
         @pages.each_with_index {|page, index| if page.include? @arguments; printSolution(page, @urls[index], @arguments) end}
-        puts("findPage not yet implemented")
     end # -- end findPage
+
+    # gets table for page
+    def anagrams(page, clue)
+        #turn page into nokogiri object
+        parsed_page = Nokogiri::HTML(page)
+        
+        # get row in table
+        parsed_page.css(".wikitable").children.each { |r| if r.text.include? clue; @row = r.text end}
+
+        # get each value from row in table
+        @table = @row.split("\n")
+
+        # print info about anagrams
+        if @table.length == 6
+            puts("Anagram: #{@table[1]}")
+            puts("Solution: #{@table[2]}")
+            puts("Location: #{@table[3]}")
+            puts("Answer: #{@table[4]}")
+            puts("Level: #{@table[5]}")
+        else
+            puts("found this:\n#{@table}\nThat doesn't seem right...")
+        end
+    end # -- end getTable
+
+
+
 
     # prints solution
     def printSolution(page, url, clue)
-        puts("url: #{url}\nclue: #{clue}")
-        puts("printSolution not yet implemented")
+        if url.include? "Anagrams"
+            anagrams(page, clue)
+        end
     end # -- end printSolution
 
 end # -- end TreasureTrails class
