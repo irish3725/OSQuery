@@ -2,6 +2,7 @@
 
 require_relative 'utils/Items'
 require_relative 'utils/Monsters'
+require_relative 'utils/TreasureTrails'
 
 # extracts options from input
 def getOptions
@@ -31,6 +32,12 @@ def main
     elsif @options[0] == "m"
         monsters = Monsters.new(@options.push(ARGV[1])) 
         monsters.run
+    elsif @options[0] == "t"
+        clue = ""
+        ARGV.each_with_index {|word, index| clue = clue + " " + word unless index == 0}
+        clue[0] = ""
+        treasureTrails = TreasureTrails.new(clue)
+        treasureTrails.run
     else
         abort("#{ARGV[0]} is not a valid option")
     end # -- end check for items option 

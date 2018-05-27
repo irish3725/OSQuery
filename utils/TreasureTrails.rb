@@ -11,6 +11,7 @@ class TreasureTrails
 
     #run TreasureTrails object
     def run
+        puts("arguments: #{@arguments}")
         getPages
         searchPages
         printSolution
