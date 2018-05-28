@@ -11,7 +11,7 @@ The syntax is very specific. The first argument needs to be a valid option, and 
 
 ### Installing OSQuery
 
-In order to be able to run OSQuery, you must install Ruby, and the two gems nokogiri and httparty, and feh. Ruby and feh can be installed via your package manager, and the gems must be installed with gem. 
+In order to be able to run OSQuery, you must install Ruby, feh, and the two gems nokogiri and httparty. Ruby and feh can be installed via your package manager, and the gems must be installed with gem. 
     
 ### Running OSQuery
 
