@@ -14,7 +14,6 @@ class TreasureTrails
     def run
         getPages
         findPage
-        #printSolution
     end # -- end run
 
     # get all treasure trails guide pages
@@ -27,16 +26,51 @@ class TreasureTrails
         @urls[4] = @urls[4] + "Emote_clues"
         @pages = Array.new(5)
         @urls.each_with_index {|url, index| @pages[index] = HTTParty.get(@urls[index])}
-#        @pages.each_with_index { |page, index| page = 
         
         @pages.each {|page| if page.include? "This page does not exist. Mayhaps it should?"; puts("invalid url: #{@urls[index]}") end}
     end # -- end getPages
 
     # search all pages for clue
     def findPage
-        puts("searching for clue: #{@arguments}")
-        @pages.each_with_index {|page, index| if page.include? @arguments; printSolution(page, @urls[index], @arguments) end}
+        # switch for opening clue boxes or search for clue
+        case @arguments
+        when "Castle", "castle"
+            puzzelBox("Castle")
+        when "Cerberus", "cerberus", "Cerb", "cerb"
+            puzzelBox("Cerberus")
+        when "Gnome", "gnome"
+            puzzelBox("Gnome")
+        when "Tree", "tree"
+            puzzelBox("Tree")
+        when "Troll", "troll"
+            puzzelBox("Troll")
+        when "Zulrah", "zulrah", "Zul", "zul"
+            puzzelBox("Zulrah")
+        else
+            puts("searching for clue: #{@arguments}")
+            @pages.each_with_index {|page, index| if page.include? @arguments; printSolution(page, @urls[index], @arguments) end}
+        end
     end # -- end findPage
+
+    def puzzelBox(box)
+
+        # switch for opening different puzzel box images
+        case box
+        when "Castle"
+            `feh -Z puzzelBoxes/Castle.png`
+        when "Cerberus"
+            `feh -Z puzzelBoxes/Cerberus.png`
+        when "Gnome"
+            `feh -Z puzzelBoxes/Gnome.png`
+        when "Tree"
+            `feh -Z puzzelBoxes/Tree.png`
+        when "Troll"
+            `feh -Z puzzelBoxes/Troll.png`
+        when "Zulrah"
+            `feh -Z puzzelBoxes/Zulrah.png`
+        end
+
+    end # -- end puzzelBox
 
     # gets table for page
     def anagrams(page, clue)
