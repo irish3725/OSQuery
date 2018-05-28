@@ -111,7 +111,23 @@ class TreasureTrails
     end # -- end cryptics
 
     def emotes(page, clue)
-        puts("emotes not yet implemented")
+
+        #turn page into nokogiri object
+        parsed_page = Nokogiri::HTML(page)
+        
+        # get row in table
+        parsed_page.css(".wikitable").children.each { |r| if r.text.include? clue; @row = r end}
+
+        # get map image from row
+        @row.css("a").css(".image").css("img").each { |r| if r["src"].include? "Emote_clue" then @map_url = r["src"] end }
+
+        @row = @row.css("td").map { |r| r.text}
+        table = ["\nClue: #{@row[0].tr("\n", '')}", "\nNotes: #{@row[2].tr("\n", '')}", "\nLevel: #{@row[4].tr("\n", '')}"]
+
+        # print outputs in table
+        table.each { |output| puts(output) }
+
+        display(@map_url)
     end # -- end emotes
 
     def display(map_url)
