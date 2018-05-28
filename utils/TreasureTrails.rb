@@ -14,6 +14,7 @@ class TreasureTrails
     def run
         getPages
         findPage
+        #printSolution
     end # -- end run
 
     # get all treasure trails guide pages
@@ -26,51 +27,16 @@ class TreasureTrails
         @urls[4] = @urls[4] + "Emote_clues"
         @pages = Array.new(5)
         @urls.each_with_index {|url, index| @pages[index] = HTTParty.get(@urls[index])}
+#        @pages.each_with_index { |page, index| page = 
         
         @pages.each {|page| if page.include? "This page does not exist. Mayhaps it should?"; puts("invalid url: #{@urls[index]}") end}
     end # -- end getPages
 
     # search all pages for clue
     def findPage
-        # switch for opening clue boxes or search for clue
-        case @arguments
-        when "Castle", "castle"
-            puzzelBox("Castle")
-        when "Cerberus", "cerberus", "Cerb", "cerb"
-            puzzelBox("Cerberus")
-        when "Gnome", "gnome"
-            puzzelBox("Gnome")
-        when "Tree", "tree"
-            puzzelBox("Tree")
-        when "Troll", "troll"
-            puzzelBox("Troll")
-        when "Zulrah", "zulrah", "Zul", "zul"
-            puzzelBox("Zulrah")
-        else
-            puts("searching for clue: #{@arguments}")
-            @pages.each_with_index {|page, index| if page.include? @arguments; printSolution(page, @urls[index], @arguments) end}
-        end
+        puts("searching for clue: #{@arguments}")
+        @pages.each_with_index {|page, index| if page.include? @arguments; printSolution(page, @urls[index], @arguments) end}
     end # -- end findPage
-
-    def puzzelBox(box)
-
-        # switch for opening different puzzel box images
-        case box
-        when "Castle"
-            `feh -Z puzzelBoxes/Castle.png`
-        when "Cerberus"
-            `feh -Z puzzelBoxes/Cerberus.png`
-        when "Gnome"
-            `feh -Z puzzelBoxes/Gnome.png`
-        when "Tree"
-            `feh -Z puzzelBoxes/Tree.png`
-        when "Troll"
-            `feh -Z puzzelBoxes/Troll.png`
-        when "Zulrah"
-            `feh -Z puzzelBoxes/Zulrah.png`
-        end
-
-    end # -- end puzzelBox
 
     # gets table for page
     def anagrams(page, clue)
@@ -118,21 +84,24 @@ class TreasureTrails
         #turn page into nokogiri object
         parsed_page = Nokogiri::HTML(page)
         
-        # get row in table
+        # get row (block) in table
         parsed_page.css(".wikitable").each { |r| if r.text.include? clue; @row = r end}
 
         table = @row.css("td").map { |r| r }
         
-        # get url for image of map
-        @row.css("a").css(".image").css("img").each { |r| if r["src"].include? "Coordinate_clue" then @map_url = r["src"] end }
-        puts("map_url: #{@map_url}")
+        # get url for image of screenshot
+        @row.css("a").css(".image").css("img").each { |r| if r["src"].include? "Coordinate_clue" then @screenshot_url = r["src"] end }
 
+        # get url for image of map
+        @row.css("a").css(".image").css("img").each { |r| if r["src"].include? "_map" then @map_url = r["src"] end }
+
+        image_urls = [@map_url, @screenshot_url]
 
         puts("\ntable length #{table.length}")
         puts("\nCoordinates: #{table[1].text.tr("\n",'')}")
         puts("\nFight: #{table[3].text.tr("\n",'')}")
         puts("\nLocation Notes: #{table[table.length-1].text.tr("\n",'')}")
-        display(@map_url)
+        displayCoordinates(image_urls)
     end # -- end coordinates
 
     def cryptics(page, clue)
@@ -180,6 +149,29 @@ class TreasureTrails
 
         display(@map_url)
     end # -- end emotes
+
+    def displayCoordinates(map_urls)
+
+        paths = ["images/map.png", "images/screenshot.png"] 
+
+        # open image and write to file
+        File.open(paths[0], "wb") do |save_file|
+            open(map_urls[0], "rb") do |read_file|
+                save_file.write(read_file.read)
+            end
+        end
+
+        # open image and write to file
+        File.open(paths[1], "wb") do |save_file|
+            open(map_urls[1], "rb") do |read_file|
+                save_file.write(read_file.read)
+            end
+        end
+
+        # display image using feh (-Z option zooms image to fill window)
+        `feh -Z #{paths[0]} #{paths[1]}`
+
+    end # -- end displayMultiple
 
     def display(map_url)
         
