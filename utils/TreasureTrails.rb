@@ -81,7 +81,24 @@ class TreasureTrails
     end # -- end ciphers
 
     def coordinates(page, clue)
-        puts("coordinates not yet implemented")
+        #turn page into nokogiri object
+        parsed_page = Nokogiri::HTML(page)
+        
+        # get row in table
+        parsed_page.css(".wikitable").each { |r| if r.text.include? clue; @row = r end}
+
+        table = @row.css("td").map { |r| r }
+        
+        # get url for image of map
+        @row.css("a").css(".image").css("img").each { |r| if r["src"].include? "Coordinate_clue" then @map_url = r["src"] end }
+        puts("map_url: #{@map_url}")
+
+
+        puts("\ntable length #{table.length}")
+        puts("\nCoordinates: #{table[1].text.tr("\n",'')}")
+        puts("\nFight: #{table[3].text.tr("\n",'')}")
+        puts("\nLocation Notes: #{table[table.length-1].text.tr("\n",'')}")
+        display(@map_url)
     end # -- end coordinates
 
     def cryptics(page, clue)
