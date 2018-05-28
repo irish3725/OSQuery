@@ -1,6 +1,7 @@
 require 'httparty'
 require 'nokogiri'
 require 'json'
+require 'open-uri'
 
 class TreasureTrails
 
@@ -59,15 +60,57 @@ class TreasureTrails
         else
             puts("found this:\n#{@table}\nThat doesn't seem right...")
         end
-    end # -- end getTable
+    end # -- end anagrams
 
+    def cryptics(page, clue)
+        
+        #turn page into nokogiri object
+        parsed_page = Nokogiri::HTML(page)
+        
+        # get row in table
+        parsed_page.css(".wikitable").children.each { |r| if r.text.include? clue; @row = r end}
+        # get images from that row
 
+        # get url for image of map
+        @row.css("a").css(".image").css("img").each { |r| if r["src"].include? "Cryptic_clue" then @map_url = r["src"] end }
 
+        # split items in row
+        @row = @row.text
+        table = @row.split("\n")
+
+        # print info about clue
+        puts("Clue: #{table[1]}")
+        puts("Notes: #{table[2]}")
+        puts("Level: #{table[5]}")
+
+        # display image of map (currently using feh)
+        display(@map_url)
+
+    end # -- end cryptics
+
+    def display(map_url)
+        
+        # path to map image
+        path = "images/map.png"
+        
+        # open image and write to file
+        File.open(path, "wb") do |save_file|
+            open(map_url, "rb") do |read_file|
+                save_file.write(read_file.read)
+            end
+        end
+
+        # display image using feh (-Z option zooms image to fill window)
+        `feh -Z #{path}`
+
+    end # -- end display
 
     # prints solution
     def printSolution(page, url, clue)
         if url.include? "Anagrams"
             anagrams(page, clue)
+        elsif url.include? "Cryptics"
+            cryptics(page, clue)
         end
     end # -- end printSolution
 
