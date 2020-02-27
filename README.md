@@ -12,13 +12,19 @@ The syntax is very specific. The first argument needs to be a valid option, and 
 ### Installing OSQuery
 
 In order to be able to run OSQuery, you must install Ruby, feh, and the two gems nokogiri and httparty. Ruby and feh can be installed via your package manager, and the gems must be installed with gem. 
+
+Debian install:
+    $ sudo apt update && sudo apt upgrade
+    $ sudo apt install ruby feh
+    $ sudo gem install nokogiri httparty
+
     
 ### Running OSQuery
 
 Now to run it:
 
-    cd OSQuery
-    ruby OSQuery.rb -i This_item
+    $ cd OSQuery
+    $ ruby OSQuery.rb -i This_item
 
 ### Options
 
@@ -29,10 +35,10 @@ Now to run it:
 For most clues, type the first few words of the clue out after the -t flag and it will figure out what kind of clue it is and show the solution. 
 Example: 
 
-    ruby OSQuery.rb -t Beckon in the Digsite
+    $ ruby OSQuery.rb -t Beckon in the Digsite
 
 If you have a puzzel box, give the -t option and the name of the box (Castle/Cerberus/Gnome/Tree/Troll/Zulrah)
 Example:
 
-    ruby OSQuery.rb -t Cerberus
+    $ ruby OSQuery.rb -t Cerberus
 
